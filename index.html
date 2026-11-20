@@ -13,12 +13,25 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="icon-192.png">
+  <style>
+    body { margin:0; background:#2c3e50; color:#fff; font-family:sans-serif;
+           display:flex; flex-direction:column; align-items:center; justify-content:center;
+           height:100vh; text-align:center; }
+    .btn { background:#f1c40f; color:#1a1a1a; padding:14px 32px; border-radius:30px;
+           font-weight:700; font-size:1.1em; text-decoration:none; margin-top:20px; }
+    .dica { font-size:0.8em; color:#9aa5b1; margin-top:30px; max-width:320px; }
+  </style>
 </head>
 
-<body style="margin:0;background:#2c3e50">
+<body>
+  <h2>Loja do Clube</h2>
+  <a class="btn" id="abrir" href="https://script.google.com/macros/s/AKfycbwNTw2knwRrC7JX7tMOa5ZOZkVGNUF2s8J7RK5deNlfWyoJA-igqF7lmLFNk3bck2AFeA/exec">Abrir Loja</a>
+  <p class="dica">📱 Para instalar a app: menu ⋮ do Chrome → "Instalar app" (faz isso nesta página, nos próximos segundos)</p>
   <script>
-    var URL_LOJA = 'https://script.google.com/macros/s/AKfycbwNTw2knwRrC7JX7tMOa5ZOZkVGNUF2s8J7RK5deNlfWyoJA-igqF7lmLFNk3bck2AFeA/exec';
-    location.replace(URL_LOJA);
+    // Depois de 6 segundos salta automaticamente para a loja
+    setTimeout(function () {
+      location.replace('https://script.google.com/macros/s/AKfycbwNTw2knwRrC7JX7tMOa5ZOZkVGNUF2s8J7RK5deNlfWyoJA-igqF7lmLFNk3bck2AFeA/exec');
+    }, 6000);
   </script>
   <script>
     if ('serviceWorker' in navigator) {
@@ -28,4 +41,5 @@
 </body>
 
 </html>
+
 
