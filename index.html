@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <base target="_top">
+  <title>Loja — Patinagem Clube de Tavira</title>
+  <?!= include('CSS'); ?>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header id="header">
+    <div id="logo">
+      <img src="https://drive.google.com/thumbnail?id=14bWuy9u1mbJ6vhKUy7KnCY3hVavbYBkV&sz=w128" alt="PCT"
+        onerror="this.remove()">
+      <span>Official <span>Store</span></span>
+    </div>
+    <nav id="nav">
+      <button class="nav-btn active" data-section="loja" id="nav-loja">🛍️ Loja</button>
+      <button class="nav-btn" data-section="carrinho" id="nav-carrinho">🛒 Carrinho <span class="cart-badge"
+          id="cart-badge" style="display:none">0</span></button>
+      <button class="nav-btn" data-section="encomendas" id="nav-encomendas">📦 Encomendas</button>
+      <button class="nav-btn" data-section="admin" id="nav-admin" style="display:none">⚙️ Admin</button>
+      <button class="nav-btn" id="nav-logout" style="display:none">🚪 Sair</button>
+      <div id="user-info" style="display:none">
+        <span>Olá, <span id="user-name"></span></span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ================= AUTH ================= -->
+  <section class="section" id="section-auth">
+    <div class="auth-card">
+      <!-- LOGIN (só quem tem NIF registado no clube) -->
+      <form class="auth-form active" id="form-login">
+        <h2 style="margin-bottom:20px">Bem-vindo ao Portal do Clube 🏆</h2>
+        <div class="form-group">
+          <label class="form-label" for="login-email">NIF do Atleta</label>
+          <input class="form-input" type="text" id="login-email" placeholder="Ex: 123456789" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input class="form-input" type="password" id="login-password" placeholder="A tua password (1º vez não inserir)">
+        </div>
+        <button type="submit" class="btn btn-primary">Entrar</button>
+        <p style="margin-top:14px;text-align:center;font-size:0.85em">
+          <a href="#" id="link-admin-login" style="color:var(--amarelo)">Administrador? Carregue aqui</a>
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= LOJA ================= -->
+  <section class="section" id="section-loja">
+    <div class="loja-header">
+      <div class="loja-titulo">Loja do Clube</div>
+      <div class="categorias-filtro" id="categorias-filtro"></div>
+    </div>
+    <div class="produtos-grid" id="produtos-grid"></div>
+  </section>
+
+  <!-- ================= CARRINHO ================= -->
+  <section class="section" id="section-carrinho">
+    <div class="carrinho-titulo">🛒 O teu carrinho</div>
+    <div id="carrinho-items"></div>
+    <div id="carrinho-total"></div>
+  </section>
+
+  <!-- ================= ENCOMENDAS ================= -->
+  <section class="section" id="section-encomendas">
+    <div class="loja-titulo" style="margin-bottom:24px">📦 As minhas encomendas</div>
+    <div id="encomendas-lista"></div>
+  </section>
+
+  <!-- ================= ADMIN ================= -->
+  <section class="section" id="section-admin">
+    <div class="admin-tabs">
+      <div class="admin-tab active" data-panel="encomendas">Encomendas</div>
+      <div class="admin-tab" data-panel="produtos">Produtos</div>
+      <div class="admin-tab" data-panel="utilizadores">Utilizadores</div>
+    </div>
+
+    <!-- ENCOMENDAS -->
+    <div class="admin-panel active" id="admin-encomendas">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-pendentes">0</div>
+          <div class="stat-label">Pendentes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-pagas">0</div>
+          <div class="stat-label">Pagas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-entregues">0</div>
+          <div class="stat-label">Entregues</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-vendas">€0.00</div>
+          <div class="stat-label">Vendas</div>
+        </div>
+      </div>
+      <div class="tabela-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Ref</th>
+              <th>Cliente</th>
+              <th>Data</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="admin-encomendas-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PRODUTOS -->
+    <div class="admin-panel" id="admin-produtos">
+      <button class="btn btn-primary" style="width:auto;margin-bottom:16px"
+        onclick="document.getElementById('modal-novo-produto').classList.add('open')">➕ Novo produto</button>
+      <div class="tabela-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Categoria</th>
+              <th>Preço</th>
+              <th>Tamanhos</th>
+              <th>Estado</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="admin-produtos-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- UTILIZADORES -->
+    <div class="admin-panel" id="admin-utilizadores">
+      <div class="tabela-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Atleta/NIF</th>
+              <th>Registo</th>
+              <th>Papel</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="admin-utilizadores-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODAL: NOVO PRODUTO ================= -->
+  <div class="modal-backdrop" id="modal-novo-produto">
+    <div class="modal">
+      <div class="modal-titulo">➕ Novo produto</div>
+      <form id="form-novo-produto">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nome</label>
+            <input class="form-input" id="p-nome" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Categoria</label>
+            <input class="form-input" id="p-categoria" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Preço (€)</label>
+            <input class="form-input" id="p-preco" type="number" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tamanhos (separados por vírgula; extra: XL:+2)</label>
+            <input class="form-input" id="p-tamanhos" placeholder="8, 10, S, M, XL:+2">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Foto principal (link)</label>
+          <input class="form-input" id="p-foto" placeholder="Link do Drive ou outro">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Foto 2 (opcional)</label>
+            <input class="form-input" id="p-foto2">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Foto 3 (opcional)</label>
+            <input class="form-input" id="p-foto3">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Descrição</label>
+          <input class="form-input" id="p-descricao">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Disponibilidade</label>
+          <select class="form-input" id="p-dispon">
+            <option value="em-stock">✔ Em stock (entrega imediata)</option>
+            <option value="por-encomenda">⏳ Por encomenda (sem stock)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Modelos / variantes (nome, foto e preço próprio)</label>
+          <div id="p-variantes-lista"></div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="adicionarCampoVariante('p-variantes-lista')">➕
+            Adicionar modelo</button>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar produto</button>
+        <button type="button" class="btn btn-secondary" style="margin-top:8px"
+          onclick="document.getElementById('modal-novo-produto').classList.remove('open')">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: EDITAR PRODUTO ================= -->
+  <div class="modal-backdrop" id="modal-produto">
+    <div class="modal">
+      <div class="modal-titulo">✏️ Editar produto</div>
+      <form id="form-editar-produto">
+        <input type="hidden" id="e-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nome</label>
+            <input class="form-input" id="e-nome" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Categoria</label>
+            <input class="form-input" id="e-categoria" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Preço (€)</label>
+            <input class="form-input" id="e-preco" type="number" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tamanhos (XL:+2 = sobretaxa)</label>
+            <input class="form-input" id="e-tamanhos">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Foto principal</label>
+          <input class="form-input" id="e-foto">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Foto 2</label>
+            <input class="form-input" id="e-foto2">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Foto 3</label>
+            <input class="form-input" id="e-foto3">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Descrição</label>
+          <input class="form-input" id="e-descricao">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ativo na loja?</label>
+          <select class="form-input" id="e-ativo">
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Disponibilidade</label>
+          <select class="form-input" id="e-dispon">
+            <option value="em-stock">✔ Em stock (entrega imediata)</option>
+            <option value="por-encomenda">⏳ Por encomenda (sem stock)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Modelos / variantes</label>
+          <div id="e-variantes-lista"></div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="adicionarCampoVariante('e-variantes-lista')">➕
+            Adicionar modelo</button>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar alterações</button>
+        <button type="button" class="btn btn-secondary" style="margin-top:8px"
+          id="btn-cancelar-edicao">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: NIF (criar password) ================= -->
+  <div class="modal-backdrop" id="modal-nif">
+    <div class="modal">
+      <div class="modal-titulo">🏆 Ativar conta</div>
+      <p style="margin-bottom:16px;font-size:0.9em;color:var(--cinzento2)">
+        Encontrámos a inscrição de <strong id="nif-nome" style="color:var(--branco)"></strong>
+        (atleta: <strong id="nif-atleta" style="color:var(--branco)"></strong>).
+        Escolhe uma password e o email que queres associar à conta da loja.
+      </p>
+      <input type="hidden" id="nif-valor">
+      <form id="form-nif-password">
+        <div class="form-group">
+          <label class="form-label">📧 Email a associar à conta</label>
+          <select class="form-input" id="nif-email" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nova password (mín. 6)</label>
+          <input class="form-input" type="password" id="nif-pass" minlength="6" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmar password</label>
+          <input class="form-input" type="password" id="nif-pass2" minlength="6" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Ativar e entrar</button>
+        <button type="button" class="btn btn-secondary" style="margin-top:8px" id="btn-cancelar-nif">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= TOASTS / LOADER ================= -->
+  <div id="toast-container"></div>
+  <div id="loading-overlay">
+    <div class="loader"></div>
+  </div>
+
+  <?!= include('JavaScript'); ?>
+</body>
+
+</html>
