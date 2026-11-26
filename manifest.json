@@ -1,4 +1,5 @@
 {
+  "id": "pt-pct-loja-001",
   "name": "PCT Loja — Patinagem Clube de Tavira",
   "short_name": "PCT Loja",
   "description": "Portal oficial do Patinagem Clube de Tavira: loja de equipamento, encomendas e comunicados do clube.",
@@ -12,6 +13,22 @@
   "categories": [
     "sports",
     "shopping"
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-phone-1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Loja do clube — catálogo de produtos"
+    },
+    {
+      "src": "screenshot-phone-2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Carrinho e encomendas"
+    }
   ],
   "icons": [
     {
